@@ -1,0 +1,16 @@
+CHIP OddCounter {
+  IN reset;
+  OUT out[16];
+
+  PARTS:
+	Inc16(in=reg,out=inc1);
+
+	Inc16(in=inc1,out=incd);
+	Register(in=Mux3,load=true,out[0]=out2);
+	Register(in=Mux3,load=true,out=out,out=reg);
+	Not(in=out2,out=not15);
+	And(a=not15,b=true,out=reseteven);
+	Or(a=reseteven,b=reset,out=truereset);	
+	Mux16(a=incd,b[0]=true,sel=truereset,out=Mux3);
+	
+}

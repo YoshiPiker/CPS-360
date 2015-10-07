@@ -1,0 +1,11 @@
+CHIP FullSubtractor {
+  IN a, b, c;
+  OUT diff, borrow;
+
+  PARTS:
+	FullAdder(a=a,b=b,c=c,sum=diff,carry=trash);
+	Or(a=b,b=c,out=orbc);
+	And(a=b,b=c,out=andbc);
+	Mux(a=orbc,b=andbc,sel=a,out=borrow);
+
+}

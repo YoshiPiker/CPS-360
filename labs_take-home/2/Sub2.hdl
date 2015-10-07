@@ -1,0 +1,8 @@
+CHIP Sub2 {
+  IN x[2], y[2];
+  OUT out[2];
+
+  PARTS:
+	HalfSubtractor(a=x[0],b=y[0],diff=out[0],borrow=d);
+	FullSubtractor(a=d,b=x[1],c=y[1],diff=out[1],borrow=dontcare);
+}

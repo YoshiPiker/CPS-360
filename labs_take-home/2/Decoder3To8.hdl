@@ -1,0 +1,8 @@
+CHIP Decoder3To8 {
+  IN x[3];
+  OUT out[8];
+
+  PARTS:
+	DMux8Way(in=true,sel[0]=x[0],sel[1]=x[1],sel[2]=x[2],a=out[0],b=out[1],c=out[2],d=out[3],e=out[4],f=out[5],g=out[6],h=out[7]);
+
+}

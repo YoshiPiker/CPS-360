@@ -1,0 +1,39 @@
+CHIP BRShift4 {
+  IN in[4], load, shift;
+  OUT out[4];
+
+  PARTS:
+	//Shift flag creation
+	Not(in=load,out=notLoad);
+	And(a=notLoad,b=shift,out=Flag);
+	
+	//Shifting
+	Mux(a=false,b=true,sel=DShiftOut1,out=shiftOutput4);
+	Mux(a=false,b=true,sel=DShiftOut2,out=shiftOutput1);
+	Mux(a=false,b=true,sel=DShiftOut3,out=shiftOutput2);
+	Mux(a=false,b=true,sel=DShiftOut4,out=shiftOutput3);
+
+	//Old vs in
+	Mux(a=regOut1,b=in[0],sel=load,out=oldIn1);
+	Mux(a=regOut2,b=in[1],sel=load,out=oldIn2);
+	Mux(a=regOut3,b=in[2],sel=load,out=oldIn3);
+	Mux(a=regOut4,b=in[3],sel=load,out=oldIn4);
+	
+	//Old vs shift OR in
+	Mux(a=oldIn1,b=shiftIn1,sel=Flag,out=regInput1);
+	Mux(a=oldIn2,b=shiftIn2,sel=Flag,out=regInput2);
+	Mux(a=oldIn3,b=shiftIn3,sel=Flag,out=regInput3);
+	Mux(a=oldIn4,b=shiftIn4,sel=Flag,out=regInput4);	
+
+	//shift vs in
+	Mux(a=shiftOutput1,b=in[0],sel=load,out=shiftIn1);
+	Mux(a=shiftOutput2,b=in[1],sel=load,out=shiftIn2);
+	Mux(a=shiftOutput3,b=in[2],sel=load,out=shiftIn3);
+	Mux(a=shiftOutput4,b=in[3],sel=load,out=shiftIn4);
+
+	//"Registry (4DFFS)"
+	DFF(in=regInput1,out=out[0],out=regOut1,out=DShiftOut1);
+	DFF(in=regInput2,out=out[1],out=regOut2,out=DShiftOut2);
+	DFF(in=regInput3,out=out[2],out=regOut3,out=DShiftOut3);
+	DFF(in=regInput4,out=out[3],out=regOut4,out=DShiftOut4);
+}

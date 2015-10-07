@@ -1,0 +1,47 @@
+/**
+ * Memory of 32 registers, each 16 bit-wide. Out holds the value
+ * stored at the memory location specified by address. If load=1, then 
+ * the in value is loaded into the memory location specified by address 
+ * (the loaded value will be emitted to out after the next time step.)
+ */
+
+/* This chip must be made using 8 RAM4 chips */
+
+CHIP RAM32 {
+    IN in[16], load, address[5];
+    OUT out[16];
+
+    PARTS:
+    // Put your code here:
+	
+
+	DMux(in=load,sel=address[4],a=outa,b=outh);
+
+	DMux(in=outa,sel=address[3],a=outb,b=outc);  
+	DMux(in=outh,sel=address[3],a=outi,b=outj);
+   
+	DMux(in=outb,sel=address[2],a=outd,b=oute);  
+	DMux(in=outc,sel=address[2],a=outf,b=outg);
+	DMux(in=outi,sel=address[2],a=outk,b=outl);  
+	DMux(in=outj,sel=address[2],a=outm,b=outn);
+
+	RAM4(in=in,load=outd, address=address[0..1],out=ram1);
+	RAM4(in=in,load=oute, address=address[0..1],out=ram2);
+	RAM4(in=in,load=outf, address=address[0..1],out=ram3);
+	RAM4(in=in,load=outg, address=address[0..1],out=ram4);
+	RAM4(in=in,load=outk, address=address[0..1],out=ram5);
+	RAM4(in=in,load=outl, address=address[0..1],out=ram6);
+	RAM4(in=in,load=outm, address=address[0..1],out=ram7);
+	RAM4(in=in,load=outn, address=address[0..1],out=ram8);
+	
+	Mux16(a=ram1,b=ram2,sel=address[2],out=out12);
+	Mux16(a=ram3,b=ram4,sel=address[2],out=out34);
+	Mux16(a=ram5,b=ram6,sel=address[2],out=out56);
+	Mux16(a=ram7,b=ram8,sel=address[2],out=out78);
+
+	Mux16(a=out12,b=out34,sel=address[3],out=out1234);
+	Mux16(a=out56,b=out78,sel=address[3],out=out5678);
+
+	Mux16(a=out1234,b=out5678,sel=address[4],out=out);
+
+}
